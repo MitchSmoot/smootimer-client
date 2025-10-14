@@ -1,5 +1,5 @@
-import { Event } from './event.service';
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { Event, EventService } from './event.service';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 
 export interface Solve {
     id?: string;
@@ -16,8 +16,12 @@ export interface Solve {
   providedIn: 'root'
 })
 export class TimerService {
+  eventService = inject(EventService)
 
   solves: WritableSignal<Solve[]> = signal<Solve[]>([]);
+  constructor() {
+    this.generateSolves();
+  }
 
   getTimes() {
     console.log('getTimes');
@@ -25,7 +29,7 @@ export class TimerService {
  
   addSolve(solve: Solve) {
     solve.id = crypto.randomUUID();
-    this.solves.update(list => [...list, solve]);
+    this.solves.update(list => [solve, ...list]);
   }
 
   addSolves(solves: Solve[]) {
@@ -42,5 +46,18 @@ export class TimerService {
 
   updateSolve(solve: Solve) {
     this.solves.update(list => list.map(s => s.id === solve.id ? solve : s));
+  }
+
+  generateSolves() {
+    const events = this.eventService.events;
+    events.forEach(e => {
+      for (let i = 0; i < 30; i++) {
+        const time = Math.floor(Math.random() * 10000) + (( 30 - i) * 500);
+        const date = new Date();
+        date.setDate(date.getDate() - (( 30 - i) * 30));
+        this.addSolve({ event: e.title, time, solveDate: date });
+      }
+
+    });
   }
 }

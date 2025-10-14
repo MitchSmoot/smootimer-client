@@ -1,13 +1,29 @@
 <nav>
-  @for (event of eventService.events; track event.title) {
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <div
-          [class.selected]="event.title === eventService.currentEvent().title"
-          (click)="eventClicked(event)">
-          {{event.title}}
-        </div>
-      </li>
-    </ul>
+  @for (puzzle of puzzleService.puzzles; track puzzle.title) {
+    <div
+      [class.selected]="puzzle.title === eventService.currentEvent().title"
+      (click)="puzzleClicked(puzzle)">
+      {{puzzle.title}}
+    </div>
   }
 </nav>
+
+@if (puzzleService.currentPuzzle.events.length > 1) {
+  <div id="event-selector-container">
+    <div id="event-selector">
+      <div class="triangle-left"></div>
+      <div id="event-selector-links">
+        @for (event of puzzleService.currentPuzzle.events; track event.title) {
+          @if (event.title !== puzzleService.currentPuzzle.title) {
+            <div
+              [class.selected]="event.title === eventService.currentEvent().title"
+              (click)="eventClicked(event)">
+              {{event.title}}
+            </div>
+          }
+        }
+      </div>
+      <div class="triangle-right"></div>
+    </div>
+  </div>
+}

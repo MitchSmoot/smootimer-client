@@ -1,25 +1,23 @@
 <nav>
-  <img src="Smootimer-nav-1.png" class="nav-icon">
-    <button type="button" data-toggle="collapse"aria-expanded="false" aria-label="Toggle navigation">
-      <span></span>
-    </button>
-  <div>
-    <ul>
-      <li>
-        <a routerLink="">Home</a>
-      </li>
-      <li>
-        <a routerLink="/timer">Timer</a>
-      </li>
-      <li>
-        <a routerLink="/import">Import</a>
-      </li> 
-      <li>
-        <a (click)="toggleTheme()">Theme</a>
-      </li>          
-      <li>
-        <a class="nav-link" (click)="login()">Login</a>
-      </li>
-    </ul>
-  </div>
+  <img src="Smootimer-nav-1.png" class="nav-icon" routerLink="">
+  <ul>
+    <li>
+      <a routerLink="/timer">Timer</a>
+    </li>
+    <li>
+      <a routerLink="/users">Users</a>
+    </li> 
+    <li>
+      <a routerLink="/import">Import</a>
+    </li> 
+    <li>
+      <a (click)="toggleTheme()">Theme</a>
+    </li>          
+    <li>
+      <a (click)="login()">Login</a>
+    </li>
+  </ul>
+  <button type="button" data-toggle="collapse"aria-expanded="false" aria-label="Toggle navigation">
+    <span>Button</span>
+  </button>
 </nav>

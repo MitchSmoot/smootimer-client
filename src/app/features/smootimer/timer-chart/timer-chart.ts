@@ -16,9 +16,9 @@ export class TimerChart {
 
 
   private svg: d3.Selection<SVGGElement, unknown, HTMLElement, any> | null = null;
-  private width = 900;
-  private height = 600;
-  private margin = { top: 20, right: 20, bottom: 30, left: 50 };
+  private width = 1080;
+  private height = 720;
+  private margin = { top: 16, right: 16, bottom: 30, left: 50 };
 
   constructor() {
     // Effect to react to data changes
@@ -90,7 +90,7 @@ export class TimerChart {
           .duration(10)
           .style("opacity", 1);
         tooltip.html(`
-          Time: ${d.time} ms<br/>
+          Time: ${d.time / 1000} seconds<br/>
           Date: ${d.solveDate.toLocaleString()}<br/>
           Event: ${d.event}<br/>
           ${d.penalty ? `Penalty: ${d.penalty}<br/>` : ''}

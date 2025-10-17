@@ -1,11 +1,40 @@
-<div class="card" style="width: 20em;">
-  <h3>{{eventService.currentEvent().title}}</h3>
-  <ol>
-    @for (solve of filteredSolves(); track solve.id) {
-      <li class="text">
+<div id="solve-list">
+  <div id="solve-list-times">
+    @for (solve of filteredSolves(); track solve.id; let i = $index) {
+      <div class="text">
         {{solve.time | timeDisplay}}
-        <a class="time-delete-button" (click)="delete(solve.id)">X</a>
-      </li>
+        @if (i < 5) {
+          <a class="time-delete-button" (click)="delete(solve.id)">X</a>
+        }
+      </div>
     }
-  </ol>  
+  </div>
+  <div id="solve-list-ao5">
+      @for (solve of ao5inProgress()?.solves; track solve.id) {
+        <div class="spacer">
+          <!-- @if(solve.id === ao5inProgress()?.best?.id && !(solve.id === ao5inProgress()?.worst?.id)) {
+            <span style="color: limegreen;">Best</span>
+          }
+          @if(solve.id === ao5inProgress()?.worst?.id && !(solve.id === ao5inProgress()?.best?.id)) {
+            <span style="color: red;">Worst</span>
+          } -->
+        </div> 
+      }
+    @for (ao5 of ao5s(); track ao5.average) {
+      <div class="text">
+        <!-- <p class="best-time">{{ao5.best.time | timeDisplay}}</p> -->
+        <p class="average">{{ao5.average | timeDisplay}}</p>
+        <!-- <p class="worst-time">{{ao5.worst.time | timeDisplay}}</p> -->
+      </div>
+    }
+  </div>
+  <div id="solve-list-ao12">
+    @for (ao12 of ao12s(); track ao12.average) {
+      <div class="text">
+        <!-- <p class="best-time">{{ao12.best.time | timeDisplay}}</p> -->
+        <p class="average">{{ao12.average | timeDisplay}}</p>
+        <!-- <p class="worst-time">{{ao12.worst.time | timeDisplay}}</p> -->
+      </div>
+    }
+  </div>
 </div>

@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Event } from "./event.service";
+import { Puzzle } from "../../../core/models/puzzle";
+import { Solve } from "../../../core/models/solve";
 
-export interface Puzzle {
-    title: string;
-    events: Event[];
-}
+
+
 
 @Injectable({
   providedIn: 'root'

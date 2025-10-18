@@ -1,15 +1,9 @@
-import { Event, EventService } from './event.service';
+import { EventService } from './event.service';
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { Event } from '../../../core/models/event';
+import { Solve } from '../../../core/models/solve';
 
-export interface Solve {
-    id?: string;
-    event: string;
-    time: number;
-    solveDate: Date;
-    penalty?: number;
-    scramble?: string;
-    comment?: string;
-}
+
 
 
 @Injectable({

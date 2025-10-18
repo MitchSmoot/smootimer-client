@@ -1,11 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-
-export interface Event {
-    title: string;
-    official: boolean;
-    puzzleType: string;
-    scrambler: string;
-}
+import { Event } from '../../../core/models/event';
 
 @Injectable({
   providedIn: 'root'

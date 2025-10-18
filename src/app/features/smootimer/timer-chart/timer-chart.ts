@@ -1,7 +1,8 @@
 import { EventService } from './../timer/event.service';
 import { Component, effect, inject } from '@angular/core';
 import * as d3 from 'd3';
-import { Solve, TimerService } from '../timer/timer.service';
+import { TimerService } from '../timer/timer.service';
+import { Solve } from '../../../core/models/solve';
 
 @Component({
   selector: 'app-timer-chart',

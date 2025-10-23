@@ -1,6 +1,6 @@
+import { Solve } from '../../core/models/solve';
 import { TimerService } from './../smootimer/timer/timer.service';
 import { inject, Injectable } from '@angular/core';
-import { Solve } from '../smootimer/timer/timer.service';
 
 type CsTimerSolve = [
   [penalty: number, time: number],

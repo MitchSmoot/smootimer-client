@@ -1,8 +1,9 @@
 import { Component, inject, Signal } from '@angular/core';
-import { Solve, TimerService } from '../timer/timer.service';
+import { TimerService } from '../timer/timer.service';
 import { TimeDisplayPipe } from "../../../core/time-display-pipe";
 import { EventService } from '../timer/event.service';
 import { computed } from '@angular/core';
+import { Solve } from '../../../core/models/solve';
 
 @Component({
   selector: 'app-solve-list',

@@ -25,8 +25,6 @@ export class EventService {
     { title: 'PLL Time Attack', official: false, puzzleType: '3x3',      scrambler: 'none' }
   ];
 
-
-
   currentEvent: WritableSignal<Event> = signal(this.events[1]);
 
   constructor() { }

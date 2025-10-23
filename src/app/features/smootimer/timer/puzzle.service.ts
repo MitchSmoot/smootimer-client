@@ -1,9 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Puzzle } from "../../../core/models/puzzle";
-import { Solve } from "../../../core/models/solve";
-
-
-
 
 @Injectable({
   providedIn: 'root'

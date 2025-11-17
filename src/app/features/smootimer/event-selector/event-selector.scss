@@ -12,6 +12,7 @@ nav {
   z-index: 10;
   gap: 1rem;
   div {
+    cursor: pointer;
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -47,6 +48,7 @@ nav {
   gap: 1rem;
   border-bottom: 1px solid var(--clr-nav-lower-border);
   padding-inline: .5rem;
+  cursor: pointer;
 }
 
 .triangle-left {

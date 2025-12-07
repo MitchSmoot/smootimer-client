@@ -1,6 +1,5 @@
 import { EventService } from './event.service';
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { Event } from '../../../core/models/event';
 import { Solve } from '../../../core/models/solve';
 
 

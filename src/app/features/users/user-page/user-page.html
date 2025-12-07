@@ -1,1 +1,8 @@
-<p>user-page works!</p>
+<section>
+  <h1>Users</h1>
+  @for (user of users ; track user.id) {
+    <div class="card" (click)="userClicked(user)">
+      <p>{{ user.name }}</p>
+    </div>
+  }
+</section>

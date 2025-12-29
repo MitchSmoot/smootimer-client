@@ -3,4 +3,5 @@ export interface Event {
     official: boolean;
     puzzleType: string;
     scrambler: string;
+    icon?: string;
 }

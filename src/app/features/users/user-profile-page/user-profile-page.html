@@ -1,1 +1,35 @@
-<h2>{{profile?.name}}'s Profile</h2>
+<section>
+  <h2>{{profile?.name}}'s Profile</h2>
+  <a href="/users">Back to User List</a>
+</section>
+
+<section class="records-section">
+  <article>
+    <h3>Records</h3>
+    @for (record of profile?.records ; track record.event) {
+      <div class="record-card">
+        <div class="record-card-header">
+          <span class="puzzle-icon">
+            @if (record.event == '2x2') {
+              <svg class="puzzle-icon" app-2x2-icon></svg>
+            } @else if (record.event == '3x3') {
+              <svg class="puzzle-icon" app-3x3-icon></svg>
+            } @else if (record.event == '4x4') {
+              <svg class="puzzle-icon" app-4x4-icon></svg>
+            } @else if (record.event == '5x5') {
+              <svg class="puzzle-icon" app-5x5-icon></svg>
+            } @else {
+              <svg class="puzzle-icon" app-3x3-icon></svg>
+            }
+          </span>
+          {{ record.event }}
+        </div>
+        <div class="record-card-details">
+          <p>Best Time: {{ record.time }} ms</p>
+          <p>Average: {{ record.average }} ms</p>
+        </div>
+      </div>
+    }
+  </article>
+</section>
+

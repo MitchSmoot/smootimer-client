@@ -1,0 +1,23 @@
+.records-section {
+
+}
+
+.record-card {
+  background-color: var(--clr-nav-lower);
+  margin-bottom: 1rem;
+  &-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    width: 100%;
+    gap: 0.5rem;
+    background-color: var(--clr-bg-secondary);
+    border-bottom: 1px solid var(--clr-nav-lower-border);
+  }
+  &-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 0.5rem 1rem 1rem 1rem;
+  }
+}

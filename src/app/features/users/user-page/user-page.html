@@ -3,6 +3,7 @@
   @for (user of users ; track user.id) {
     <div class="card" (click)="userClicked(user)">
       <p>{{ user.name }}</p>
+      <p>Score: {{ user.score }}</p>
     </div>
   }
 </section>

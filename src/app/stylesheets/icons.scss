@@ -1,0 +1,15 @@
+.puzzle-icon {
+margin: 1rem;
+  height: var(--icon-puzzle-size);
+  width: var(--icon-puzzle-size);
+  rect {
+    fill: var(--icon-puzzle-color);
+    stroke-width: var(--icon-puzzle-stroke-width);
+    stroke: var(--icon-puzzle-stroke-color);
+  }
+  :hover {
+    rect {
+      fill: var(--icon-puzzle-color-hover);
+    }
+  }
+}

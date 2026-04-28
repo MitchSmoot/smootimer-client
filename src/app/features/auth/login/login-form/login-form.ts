@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { Field, form } from '@angular/forms/signals';
+import { form } from '@angular/forms/signals';
 
 interface LoginData {
   email: string;
@@ -8,7 +8,7 @@ interface LoginData {
 
 @Component({
   selector: 'app-login-form',
-  imports: [Field],
+  imports: [],
   templateUrl: './login-form.html',
   styleUrl: './login-form.scss',
 })

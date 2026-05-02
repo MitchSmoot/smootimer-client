@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import {
+  injectSpacetimeDB,
+} from 'spacetimedb/angular';
 
 @Component({
   selector: 'app-home-page',
@@ -7,5 +10,8 @@ import { Component } from '@angular/core';
   styleUrl: './home-page.scss'
 })
 export class HomePage {
+  protected conn = injectSpacetimeDB();
 
 }
+
+

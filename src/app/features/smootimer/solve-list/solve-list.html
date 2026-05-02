@@ -3,7 +3,7 @@
     @for (solve of filteredSolves(); track solve.id; let i = $index) {
       <div class="text">
         {{solve.time | timeDisplay}}
-        @if (i < 5) {
+        @if (i < 50) {
           <a class="time-delete-button" (click)="delete(solve.id)">X</a>
         }
       </div>

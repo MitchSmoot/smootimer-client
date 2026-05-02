@@ -1,9 +1,9 @@
 export interface Solve {
-    id?: string;
+    id?: bigint;
     event: string;
     time: number;
-    solveDate: Date;
-    penalty?: number;
+    solvedAt: Date;
+    penalty?: string;
     scramble?: string;
     comment?: string;
 }

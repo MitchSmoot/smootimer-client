@@ -25,12 +25,12 @@ export class TimerChart {
     // Effect to react to data changes
     effect(() => {
       const solves = this.timerService.solves();
-      const filteredSolves = solves.filter(s => s.event === this.EventService.currentEvent().title);
-      this.updateChart(filteredSolves);
+      // const filteredSolves = solves.filter(s => s.event === this.EventService.currentEvent().title);
+      this.updateChart(solves);
     });
   }
 
-  private updateChart(solves: Solve[]): void {
+  private updateChart(solves: Solve[] ): void {
     // Clear existing chart
     d3.select('#chart').selectAll('*').remove();
 
@@ -47,7 +47,7 @@ export class TimerChart {
 
     // Set up scales
     const x = d3.scaleTime()
-      .domain(d3.extent(solves, d => d.solveDate) as [Date, Date])
+      .domain(d3.extent(solves, d => d.solvedAt) as [Date, Date])
       .range([0, innerWidth]);
 
     const y = d3.scaleLinear()
@@ -55,8 +55,8 @@ export class TimerChart {
       .range([innerHeight, 0]);
 
     // Define the line
-    const line = d3.line<{ solveDate: Date, time: number }>()
-      .x(d => x(d.solveDate))
+    const line = d3.line<{ solvedAt: Date, time: number }>()
+      .x(d => x(d.solvedAt))
       .y(d => y(d.time));
 
     const tooltipDiv = d3.select("#chart").append("div")
@@ -76,7 +76,7 @@ export class TimerChart {
       .data(solves)
       .enter()
       .append("circle")
-      .attr("cx", d => x(d.solveDate))
+      .attr("cx", d => x(d.solvedAt))
       .attr("cy", d => y(d.time))
       .attr("r", 5)
       .style("fill", "steelblue").on("mouseover", function(event, d) {
@@ -92,7 +92,7 @@ export class TimerChart {
           .style("opacity", 1);
         tooltip.html(`
           Time: ${d.time / 1000} seconds<br/>
-          Date: ${d.solveDate.toLocaleString()}<br/>
+          Date: ${d.solvedAt.toLocaleString()}<br/>
           Event: ${d.event}<br/>
           ${d.penalty ? `Penalty: ${d.penalty}<br/>` : ''}
           ${d.comment ? `Comment: ${d.comment}<br/>` : ''}

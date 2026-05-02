@@ -91,11 +91,11 @@ export class Timer {
     this.timerService.addSolve({
       time: this.timeCounter,
       event: this.eventService.currentEvent().title,
-      solveDate: new Date()
+      solvedAt: new Date()
     });
   }
 
-  deleteTime(id: string): void {
+  deleteTime(id: bigint): void {
     this.timerService.deleteSolve(id);
   }
 

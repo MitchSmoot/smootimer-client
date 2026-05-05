@@ -6,15 +6,13 @@
 import { type Infer as __Infer } from "spacetimedb";
 
 // Import all reducer arg schemas
-import AddReducer from "../add_reducer";
 import AddSolveReducer from "../add_solve_reducer";
 import DeleteSolveReducer from "../delete_solve_reducer";
-import SayHelloReducer from "../say_hello_reducer";
+import RegisterReducer from "../register_reducer";
 import UpdatePenaltyReducer from "../update_penalty_reducer";
 
-export type AddParams = __Infer<typeof AddReducer>;
 export type AddSolveParams = __Infer<typeof AddSolveReducer>;
 export type DeleteSolveParams = __Infer<typeof DeleteSolveReducer>;
-export type SayHelloParams = __Infer<typeof SayHelloReducer>;
+export type RegisterParams = __Infer<typeof RegisterReducer>;
 export type UpdatePenaltyParams = __Infer<typeof UpdatePenaltyReducer>;
 

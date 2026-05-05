@@ -10,11 +10,6 @@ import {
   type Infer as __Infer,
 } from "spacetimedb";
 
-export const Person = __t.object("Person", {
-  name: __t.string(),
-});
-export type Person = __Infer<typeof Person>;
-
 export const Solve = __t.object("Solve", {
   id: __t.u64(),
   event: __t.string(),
@@ -25,4 +20,18 @@ export const Solve = __t.object("Solve", {
   comment: __t.option(__t.string()),
 });
 export type Solve = __Infer<typeof Solve>;
+
+export const User = __t.object("User", {
+  id: __t.u64(),
+  email: __t.string(),
+  name: __t.string(),
+  online: __t.bool(),
+});
+export type User = __Infer<typeof User>;
+
+export const UserIdentity = __t.object("UserIdentity", {
+  identity: __t.identity(),
+  userId: __t.u64(),
+});
+export type UserIdentity = __Infer<typeof UserIdentity>;
 

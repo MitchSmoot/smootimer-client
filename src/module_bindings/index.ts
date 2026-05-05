@@ -34,29 +34,22 @@ import {
 } from "spacetimedb";
 
 // Import all reducer arg schemas
-import AddReducer from "./add_reducer";
 import AddSolveReducer from "./add_solve_reducer";
 import DeleteSolveReducer from "./delete_solve_reducer";
-import SayHelloReducer from "./say_hello_reducer";
+import RegisterReducer from "./register_reducer";
 import UpdatePenaltyReducer from "./update_penalty_reducer";
 
 // Import all procedure arg schemas
 
 // Import all table schema definitions
-import PersonRow from "./person_table";
 import SolveRow from "./solve_table";
+import UserRow from "./user_table";
+import UserIdentityRow from "./user_identity_table";
 
 /** Type-only namespace exports for generated type groups. */
 
 /** The schema information for all tables in this module. This is defined the same was as the tables would have been defined in the server. */
 const tablesSchema = __schema({
-  person: __table({
-    name: 'person',
-    indexes: [
-    ],
-    constraints: [
-    ],
-  }, PersonRow),
   solve: __table({
     name: 'solve',
     indexes: [
@@ -71,14 +64,42 @@ const tablesSchema = __schema({
       { name: 'solve_id_key', constraint: 'unique', columns: ['id'] },
     ],
   }, SolveRow),
+  user: __table({
+    name: 'user',
+    indexes: [
+      { accessor: 'email', name: 'user_email_idx_btree', algorithm: 'btree', columns: [
+        'email',
+      ] },
+      { accessor: 'id', name: 'user_id_idx_btree', algorithm: 'btree', columns: [
+        'id',
+      ] },
+    ],
+    constraints: [
+      { name: 'user_email_key', constraint: 'unique', columns: ['email'] },
+      { name: 'user_id_key', constraint: 'unique', columns: ['id'] },
+    ],
+  }, UserRow),
+  userIdentity: __table({
+    name: 'user_identity',
+    indexes: [
+      { accessor: 'identity', name: 'user_identity_identity_idx_btree', algorithm: 'btree', columns: [
+        'identity',
+      ] },
+      { accessor: 'ui_user_id', name: 'user_identity_user_id_idx_btree', algorithm: 'btree', columns: [
+        'userId',
+      ] },
+    ],
+    constraints: [
+      { name: 'user_identity_identity_key', constraint: 'unique', columns: ['identity'] },
+    ],
+  }, UserIdentityRow),
 });
 
 /** The schema information for all reducers in this module. This is defined the same way as the reducers would have been defined in the server, except the body of the reducer is omitted in code generation. */
 const reducersSchema = __reducers(
-  __reducerSchema("add", AddReducer),
   __reducerSchema("add_solve", AddSolveReducer),
   __reducerSchema("delete_solve", DeleteSolveReducer),
-  __reducerSchema("say_hello", SayHelloReducer),
+  __reducerSchema("register", RegisterReducer),
   __reducerSchema("update_penalty", UpdatePenaltyReducer),
 );
 

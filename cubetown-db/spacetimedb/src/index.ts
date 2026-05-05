@@ -1,29 +1,13 @@
 import { schema, table, t, SenderError } from 'spacetimedb/server';
+import { User, UserIdentity } from './schema/user';
+import { Solve } from './schema/solve';
+
+
 
 const spacetimedb = schema({
-  person: table(
-    { public: true },
-    {
-      name: t.string(),
-    }
-  ),
-    solve: table(
-    {
-      public: true,
-      indexes: [
-        { accessor: 'solve_solver', algorithm: 'btree', columns: ['event'] },
-      ],
-    },
-    {
-      id: t.u64().primaryKey().autoInc(),
-      event: t.string(),
-      time: t.u32(),
-      solvedAt: t.timestamp(),
-      penalty: t.string(),
-      scramble: t.string().optional(),
-      comment: t.string().optional()
-    }
-  ),
+  user: User,
+  userIdentity: UserIdentity,
+  solve: Solve
 });
 export default spacetimedb;
 
@@ -39,19 +23,36 @@ export const onDisconnect = spacetimedb.clientDisconnected(_ctx => {
   // Called every time a client disconnects
 });
 
-export const add = spacetimedb.reducer(
-  { name: t.string() },
-  (ctx, { name }) => {
-    ctx.db.person.insert({ name });
+export const register = spacetimedb.reducer( 
+  { name: t.string(), email: t.string() },
+  (ctx, { name, email }) => {
+    if (!name.trim()) throw new SenderError('Name cannot be empty');
+    if (!email.trim()) throw new SenderError('Email cannot be empty');
+
+    const existingIdentity = ctx.db.userIdentity.identity.find(ctx.sender);
+    if (existingIdentity) {
+      const user = ctx.db.user.id.find(existingIdentity.userId);
+      if (user) {
+        ctx.db.user.id.update({ ...user, name, online: true });
+      }
+      return;
+    }
+
+    const existingUser = ctx.db.user.email.find(email);
+    if (existingUser) {
+      ctx.db.userIdentity.insert({ identity: ctx.sender, userId: existingUser.id });
+      ctx.db.user.id.update({ ...existingUser, name, online: true });
+    } else {
+      const newUser = ctx.db.user.insert({
+        id: 0n,
+        email,
+        name,
+        online: true,
+      });
+      ctx.db.userIdentity.insert({ identity: ctx.sender, userId: newUser.id });
+    }
   }
 );
-
-export const sayHello = spacetimedb.reducer(ctx => {
-  for (const person of ctx.db.person.iter()) {
-    console.info(`Hello, ${person.name}!`);
-  }
-  console.info('Hello, World!');
-});
 
 export const addSolve = spacetimedb.reducer(
   {

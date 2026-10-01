@@ -21,6 +21,9 @@ export const FriendRequest = __t.object("FriendRequest", {
 });
 export type FriendRequest = __Infer<typeof FriendRequest>;
 
+export const FriendTicks = __t.object("FriendTicks", {});
+export type FriendTicks = __Infer<typeof FriendTicks>;
+
 export const Friendship = __t.object("Friendship", {
   id: __t.u64(),
   owner: __t.identity(),
@@ -54,6 +57,14 @@ export const Solve = __t.object("Solve", {
 });
 export type Solve = __Infer<typeof Solve>;
 
+export const Tick = __t.object("Tick", {
+  id: __t.u64(),
+  actor: __t.identity(),
+  message: __t.string(),
+  createdAt: __t.timestamp(),
+});
+export type Tick = __Infer<typeof Tick>;
+
 export const User = __t.object("User", {
   identity: __t.identity(),
   name: __t.string(),
@@ -61,6 +72,7 @@ export const User = __t.object("User", {
   createdAt: __t.timestamp(),
   wcaId: __t.option(__t.string()),
   realName: __t.option(__t.string()),
+  focusing: __t.bool(),
 });
 export type User = __Infer<typeof User>;
 

@@ -129,8 +129,8 @@
                 <a [routerLink]="['/users', friend.identity.toString()]">{{ friend.name }}</a>
               </th>
               <td>
-                <span class="status" [class.status-online]="friend.online">
-                  {{ friend.online ? 'Online' : 'Offline' }}
+                <span class="status" [class.status-online]="friend.online && !friend.focusing">
+                  {{ !friend.online ? 'Offline' : friend.focusing ? 'Focusing' : 'Online' }}
                 </span>
               </td>
               <td>{{ friend.practicingEvent ?? '' }}</td>

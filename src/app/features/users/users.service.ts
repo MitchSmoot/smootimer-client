@@ -15,6 +15,7 @@ export class UsersService {
   protected users = injectTable(tables.user);
   private solves = injectTable(tables.solve);
   private setProfileReducer = injectReducer(reducers.setProfile);
+  private setFocusReducer = injectReducer(reducers.setFocus);
 
   /** The `user` row for the logged-in person (created server-side on first login). Undefined for guests. */
   currentUser = computed(() => {
@@ -22,6 +23,13 @@ export class UsersService {
     if (!identity) return undefined;
     return this.users().rows.find((u) => u.identity.isEqual(identity));
   });
+
+  /** True while the logged-in user has focus mode on (always false for guests). */
+  focusing = computed(() => this.currentUser()?.focusing ?? false);
+
+  setFocus(focusing: boolean) {
+    this.setFocusReducer({ focusing });
+  }
 
   getUsers() {
     return this.users().rows;

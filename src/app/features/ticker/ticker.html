@@ -1,0 +1,7 @@
+@if (ticker.visible()) {
+  <aside class="ticker" aria-label="Friend activity" aria-live="polite">
+    @for (message of ticker.messages(); track message.id) {
+      <p class="ticker-message">{{ message.text }}</p>
+    }
+  </aside>
+}

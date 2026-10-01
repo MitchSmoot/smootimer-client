@@ -29,6 +29,10 @@ nav {
     margin-right: 2rem;
   }
 }
+.focus-toggle.focus-on {
+  background-color: var(--clr-bg-accent);
+  color: var(--clr-text-black);
+}
 .nav-user {
   display: inline-flex;
   align-items: center;

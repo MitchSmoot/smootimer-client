@@ -37,7 +37,17 @@
       </li>
     }
   </ul>
-  <button type="button" data-toggle="collapse"aria-expanded="false" aria-label="Toggle navigation">
-    <span>Button</span>
-  </button>
+  @if (auth.isAuthenticated) {
+    <button
+      type="button"
+      class="focus-toggle"
+      [class.focus-on]="users.focusing()"
+      [attr.aria-pressed]="users.focusing()"
+      [disabled]="!users.currentUser()"
+      title="Focus mode: show as focusing and hide the friend ticker"
+      (click)="users.setFocus(!users.focusing())"
+    >
+      {{ users.focusing() ? 'Focusing' : 'Focus' }}
+    </button>
+  }
 </nav>

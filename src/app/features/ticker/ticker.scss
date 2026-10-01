@@ -1,0 +1,35 @@
+// Fixed to the bottom-left of the viewport on every route. Kept small and click-through
+// so it doesn't get in the way; adjust size / position here.
+.ticker {
+  position: fixed;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 15;
+  width: 16rem;
+  max-height: 8rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; // newest at the bottom, older messages pushed up
+  gap: 0.25rem;
+  pointer-events: none;
+  font-size: 0.8rem;
+}
+
+.ticker-message {
+  margin: 0;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background-color: var(--clr-nav-upper);
+  border: 1px solid var(--clr-nav-upper-border);
+  color: var(--clr-text-primary);
+  opacity: 0.9;
+  animation: ticker-in 0.25s ease-out;
+}
+
+@keyframes ticker-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}

@@ -40,6 +40,8 @@ import DeleteSolveReducer from "./delete_solve_reducer";
 import RemoveFriendReducer from "./remove_friend_reducer";
 import RespondToFriendRequestReducer from "./respond_to_friend_request_reducer";
 import SendFriendRequestReducer from "./send_friend_request_reducer";
+import SendTickReducer from "./send_tick_reducer";
+import SetFocusReducer from "./set_focus_reducer";
 import SetNameReducer from "./set_name_reducer";
 import SetPracticeEventReducer from "./set_practice_event_reducer";
 import SetProfileReducer from "./set_profile_reducer";
@@ -49,6 +51,7 @@ import UpdatePenaltyReducer from "./update_penalty_reducer";
 
 // Import all table schema definitions
 import FriendPracticeStatusRow from "./friend_practice_status_table";
+import FriendTicksRow from "./friend_ticks_table";
 import MyFriendRequestsRow from "./my_friend_requests_table";
 import MyFriendshipsRow from "./my_friendships_table";
 import SolveRow from "./solve_table";
@@ -90,6 +93,13 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, FriendPracticeStatusRow),
+  friendTicks: __table({
+    name: 'friend_ticks',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, FriendTicksRow),
   myFriendRequests: __table({
     name: 'my_friend_requests',
     indexes: [
@@ -114,6 +124,8 @@ const reducersSchema = __reducers(
   __reducerSchema("remove_friend", RemoveFriendReducer),
   __reducerSchema("respond_to_friend_request", RespondToFriendRequestReducer),
   __reducerSchema("send_friend_request", SendFriendRequestReducer),
+  __reducerSchema("send_tick", SendTickReducer),
+  __reducerSchema("set_focus", SetFocusReducer),
   __reducerSchema("set_name", SetNameReducer),
   __reducerSchema("set_practice_event", SetPracticeEventReducer),
   __reducerSchema("set_profile", SetProfileReducer),
@@ -128,6 +140,8 @@ type __SchemaWithTableAccessorAliases = Omit<typeof tablesSchema.schemaType, "ta
   tables: typeof tablesSchema.schemaType.tables & {
     /** @deprecated Use `friendPracticeStatus` instead. This alias will be removed in the next major version. */
     readonly "friend_practice_status": Omit<typeof tablesSchema.schemaType.tables["friendPracticeStatus"], "accessorName"> & { readonly accessorName: "friend_practice_status" };
+    /** @deprecated Use `friendTicks` instead. This alias will be removed in the next major version. */
+    readonly "friend_ticks": Omit<typeof tablesSchema.schemaType.tables["friendTicks"], "accessorName"> & { readonly accessorName: "friend_ticks" };
     /** @deprecated Use `myFriendRequests` instead. This alias will be removed in the next major version. */
     readonly "my_friend_requests": Omit<typeof tablesSchema.schemaType.tables["myFriendRequests"], "accessorName"> & { readonly accessorName: "my_friend_requests" };
     /** @deprecated Use `myFriendships` instead. This alias will be removed in the next major version. */
@@ -151,6 +165,7 @@ const REMOTE_MODULE = {
 
 const tableAccessorAliases = {
   "friend_practice_status": "friendPracticeStatus",
+  "friend_ticks": "friendTicks",
   "my_friend_requests": "myFriendRequests",
   "my_friendships": "myFriendships",
 } as const;
@@ -175,6 +190,8 @@ type __DbViewBase = __DbConnectionImpl<typeof REMOTE_MODULE>["db"];
 export type DbView = __DbViewBase & {
   /** @deprecated Use `friendPracticeStatus` instead. This alias will be removed in the next major version. */
   readonly "friend_practice_status": __DbViewBase["friendPracticeStatus"];
+  /** @deprecated Use `friendTicks` instead. This alias will be removed in the next major version. */
+  readonly "friend_ticks": __DbViewBase["friendTicks"];
   /** @deprecated Use `myFriendRequests` instead. This alias will be removed in the next major version. */
   readonly "my_friend_requests": __DbViewBase["myFriendRequests"];
   /** @deprecated Use `myFriendships` instead. This alias will be removed in the next major version. */
@@ -185,6 +202,8 @@ type __TablesBase = __QueryBuilder<typeof tablesSchema.schemaType>;
 export type Tables = __TablesBase & {
   /** @deprecated Use `friendPracticeStatus` instead. This alias will be removed in the next major version. */
   readonly "friend_practice_status": __TablesBase["friendPracticeStatus"];
+  /** @deprecated Use `friendTicks` instead. This alias will be removed in the next major version. */
+  readonly "friend_ticks": __TablesBase["friendTicks"];
   /** @deprecated Use `myFriendRequests` instead. This alias will be removed in the next major version. */
   readonly "my_friend_requests": __TablesBase["myFriendRequests"];
   /** @deprecated Use `myFriendships` instead. This alias will be removed in the next major version. */

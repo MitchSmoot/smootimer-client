@@ -64,6 +64,8 @@ export class FriendsService {
           identity: f.friend,
           name: user?.name ?? 'Unknown',
           online: user?.online ?? false,
+          /** Online but in focus mode. */
+          focusing: (user?.online && user?.focusing) ?? false,
           /** Only set while the friend is online with the timer page open. */
           practicingEvent: user?.online ? status?.event : undefined,
           since: f.since,

@@ -4,6 +4,7 @@ import { AuthService } from '../../auth/auth.service';
 import { Solve } from '../../../core/models/solve';
 import { injectSpacetimeDB, injectTable, injectReducer } from 'spacetimedb/angular';
 import { tables, reducers } from '../../../../module_bindings';
+import { TickerService } from '../../ticker/ticker.service';
 
 
 
@@ -37,6 +38,7 @@ function saveGuestSolves(solves: Solve[]): void {
 export class TimerService {
   eventService = inject(EventService)
   private auth = inject(AuthService);
+  private tickerService = inject(TickerService);
   protected conn = injectSpacetimeDB(); 
   private addSolveReducer = injectReducer(reducers.addSolve);
   private deleteSolveReducer = injectReducer(reducers.deleteSolve)

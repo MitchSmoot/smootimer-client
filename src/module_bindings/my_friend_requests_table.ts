@@ -11,10 +11,8 @@ import {
 } from "spacetimedb";
 
 export default __t.row({
-  identity: __t.identity().primaryKey(),
-  name: __t.string(),
-  online: __t.bool(),
+  id: __t.u64().primaryKey(),
+  sender: __t.identity(),
+  recipient: __t.identity(),
   createdAt: __t.timestamp().name("created_at"),
-  wcaId: __t.option(__t.string()).name("wca_id"),
-  realName: __t.option(__t.string()).name("real_name"),
 });

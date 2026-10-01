@@ -29,6 +29,16 @@ nav {
     margin-right: 2rem;
   }
 }
+.nav-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.nav-notification {
+  height: 1.1em;
+  width: 1.1em;
+  color: var(--clr-text-accent);
+}
 .nav-icon {
   height: 60px;
   width: 76px;

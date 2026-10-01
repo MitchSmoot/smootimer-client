@@ -7,12 +7,24 @@ import { type Infer as __Infer } from "spacetimedb";
 
 // Import all reducer arg schemas
 import AddSolveReducer from "../add_solve_reducer";
+import CancelFriendRequestReducer from "../cancel_friend_request_reducer";
 import DeleteSolveReducer from "../delete_solve_reducer";
+import RemoveFriendReducer from "../remove_friend_reducer";
+import RespondToFriendRequestReducer from "../respond_to_friend_request_reducer";
+import SendFriendRequestReducer from "../send_friend_request_reducer";
 import SetNameReducer from "../set_name_reducer";
+import SetPracticeEventReducer from "../set_practice_event_reducer";
+import SetProfileReducer from "../set_profile_reducer";
 import UpdatePenaltyReducer from "../update_penalty_reducer";
 
 export type AddSolveParams = __Infer<typeof AddSolveReducer>;
+export type CancelFriendRequestParams = __Infer<typeof CancelFriendRequestReducer>;
 export type DeleteSolveParams = __Infer<typeof DeleteSolveReducer>;
+export type RemoveFriendParams = __Infer<typeof RemoveFriendReducer>;
+export type RespondToFriendRequestParams = __Infer<typeof RespondToFriendRequestReducer>;
+export type SendFriendRequestParams = __Infer<typeof SendFriendRequestReducer>;
 export type SetNameParams = __Infer<typeof SetNameReducer>;
+export type SetPracticeEventParams = __Infer<typeof SetPracticeEventReducer>;
+export type SetProfileParams = __Infer<typeof SetProfileReducer>;
 export type UpdatePenaltyParams = __Infer<typeof UpdatePenaltyReducer>;
 

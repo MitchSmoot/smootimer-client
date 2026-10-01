@@ -22,6 +22,10 @@ export const CubetownSchema = {
       name: t.string(),
       online: t.bool(),
       createdAt: t.timestamp(),
+      // Optional profile details the user can add themselves (see `set_profile`).
+      // New columns go last and carry a default so the published table can be migrated in place.
+      wcaId: t.string().optional().default(undefined),
+      realName: t.string().optional().default(undefined),
     }
   ),
   /**
@@ -47,7 +51,67 @@ export const CubetownSchema = {
       scramble: t.string().optional(),
       comment: t.string().optional()
     }
-  )
+  ),
+
+  // ---------------------------------------------------------------------------
+  // Friends
+  //
+  // The tables below are PRIVATE: clients never read them directly, only through
+  // the per-user views in views/friends.ts (which are scoped to `ctx.sender`).
+  // ---------------------------------------------------------------------------
+
+  /** A pending request. Deleted as soon as it is accepted, denied or cancelled. */
+  friendRequest: table(
+    {
+      indexes: [
+        { accessor: 'friend_request_sender', algorithm: 'btree', columns: ['sender'] },
+        { accessor: 'friend_request_recipient', algorithm: 'btree', columns: ['recipient'] },
+      ],
+    },
+    {
+      id: t.u64().primaryKey().autoInc(),
+      sender: t.identity(),
+      recipient: t.identity(),
+      createdAt: t.timestamp(),
+    }
+  ),
+
+  /**
+   * One row per *direction* of a friendship: A+B is stored as (A -> B) and (B -> A).
+   *
+   * Storing both directions means "who are X's friends?" is a single index lookup on
+   * `owner`, with no OR / second lookup, and the same lookup keys any per-friend
+   * data. The future friend-activity ticker is then: friendship_owner(me) -> for each
+   * `friend`, read that friend's newest rows through an index keyed by actor
+   * (e.g. an `activity` table indexed on `actor`). It never has to scan a table.
+   * Both rows are always inserted / deleted together by the reducers in reducers/friends.ts.
+   */
+  friendship: table(
+    {
+      indexes: [{ accessor: 'friendship_owner', algorithm: 'btree', columns: ['owner'] }],
+    },
+    {
+      id: t.u64().primaryKey().autoInc(),
+      owner: t.identity(),
+      friend: t.identity(),
+      since: t.timestamp(),
+    }
+  ),
+
+  /**
+   * What event a user currently has open in the timer page. A row exists only while
+   * they are practicing (the client clears it when the page closes, and it is also
+   * cleared when they disconnect). Looked up by identity, so friends' status is a
+   * point lookup per friend.
+   */
+  practiceStatus: table(
+    {},
+    {
+      identity: t.identity().primaryKey(),
+      event: t.string(),
+      updatedAt: t.timestamp(),
+    }
+  ),
 }
 
 export const spacetimedb = schema(CubetownSchema);

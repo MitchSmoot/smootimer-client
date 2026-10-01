@@ -10,6 +10,38 @@ import {
   type Infer as __Infer,
 } from "spacetimedb";
 
+export const FriendPracticeStatus = __t.object("FriendPracticeStatus", {});
+export type FriendPracticeStatus = __Infer<typeof FriendPracticeStatus>;
+
+export const FriendRequest = __t.object("FriendRequest", {
+  id: __t.u64(),
+  sender: __t.identity(),
+  recipient: __t.identity(),
+  createdAt: __t.timestamp(),
+});
+export type FriendRequest = __Infer<typeof FriendRequest>;
+
+export const Friendship = __t.object("Friendship", {
+  id: __t.u64(),
+  owner: __t.identity(),
+  friend: __t.identity(),
+  since: __t.timestamp(),
+});
+export type Friendship = __Infer<typeof Friendship>;
+
+export const MyFriendRequests = __t.object("MyFriendRequests", {});
+export type MyFriendRequests = __Infer<typeof MyFriendRequests>;
+
+export const MyFriendships = __t.object("MyFriendships", {});
+export type MyFriendships = __Infer<typeof MyFriendships>;
+
+export const PracticeStatus = __t.object("PracticeStatus", {
+  identity: __t.identity(),
+  event: __t.string(),
+  updatedAt: __t.timestamp(),
+});
+export type PracticeStatus = __Infer<typeof PracticeStatus>;
+
 export const Solve = __t.object("Solve", {
   id: __t.u64(),
   owner: __t.identity(),
@@ -27,6 +59,8 @@ export const User = __t.object("User", {
   name: __t.string(),
   online: __t.bool(),
   createdAt: __t.timestamp(),
+  wcaId: __t.option(__t.string()),
+  realName: __t.option(__t.string()),
 });
 export type User = __Infer<typeof User>;
 

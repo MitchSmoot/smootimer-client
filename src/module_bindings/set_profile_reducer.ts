@@ -10,11 +10,8 @@ import {
   type Infer as __Infer,
 } from "spacetimedb";
 
-export default __t.row({
-  identity: __t.identity().primaryKey(),
+export default {
   name: __t.string(),
-  online: __t.bool(),
-  createdAt: __t.timestamp().name("created_at"),
-  wcaId: __t.option(__t.string()).name("wca_id"),
-  realName: __t.option(__t.string()).name("real_name"),
-});
+  wcaId: __t.option(__t.string()),
+  realName: __t.option(__t.string()),
+};

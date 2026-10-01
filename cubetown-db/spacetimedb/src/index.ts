@@ -6,6 +6,9 @@ export default spacetimedb;
 export * from './reducers/users';
 // Solve reducers (all scoped to the calling user)
 export * from './reducers/solves';
+// Friends: requests, friendships, practice status
+export * from './reducers/friends';
+export * from './views/friends';
 
 export const init = spacetimedb.init(_ctx => {
   // Called when the module is initially published

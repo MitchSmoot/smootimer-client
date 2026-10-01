@@ -35,13 +35,22 @@ import {
 
 // Import all reducer arg schemas
 import AddSolveReducer from "./add_solve_reducer";
+import CancelFriendRequestReducer from "./cancel_friend_request_reducer";
 import DeleteSolveReducer from "./delete_solve_reducer";
+import RemoveFriendReducer from "./remove_friend_reducer";
+import RespondToFriendRequestReducer from "./respond_to_friend_request_reducer";
+import SendFriendRequestReducer from "./send_friend_request_reducer";
 import SetNameReducer from "./set_name_reducer";
+import SetPracticeEventReducer from "./set_practice_event_reducer";
+import SetProfileReducer from "./set_profile_reducer";
 import UpdatePenaltyReducer from "./update_penalty_reducer";
 
 // Import all procedure arg schemas
 
 // Import all table schema definitions
+import FriendPracticeStatusRow from "./friend_practice_status_table";
+import MyFriendRequestsRow from "./my_friend_requests_table";
+import MyFriendshipsRow from "./my_friendships_table";
 import SolveRow from "./solve_table";
 import UserRow from "./user_table";
 
@@ -74,13 +83,40 @@ const tablesSchema = __schema({
       { name: 'user_identity_key', constraint: 'unique', columns: ['identity'] },
     ],
   }, UserRow),
+  friendPracticeStatus: __table({
+    name: 'friend_practice_status',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, FriendPracticeStatusRow),
+  myFriendRequests: __table({
+    name: 'my_friend_requests',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyFriendRequestsRow),
+  myFriendships: __table({
+    name: 'my_friendships',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyFriendshipsRow),
 });
 
 /** The schema information for all reducers in this module. This is defined the same way as the reducers would have been defined in the server, except the body of the reducer is omitted in code generation. */
 const reducersSchema = __reducers(
   __reducerSchema("add_solve", AddSolveReducer),
+  __reducerSchema("cancel_friend_request", CancelFriendRequestReducer),
   __reducerSchema("delete_solve", DeleteSolveReducer),
+  __reducerSchema("remove_friend", RemoveFriendReducer),
+  __reducerSchema("respond_to_friend_request", RespondToFriendRequestReducer),
+  __reducerSchema("send_friend_request", SendFriendRequestReducer),
   __reducerSchema("set_name", SetNameReducer),
+  __reducerSchema("set_practice_event", SetPracticeEventReducer),
+  __reducerSchema("set_profile", SetProfileReducer),
   __reducerSchema("update_penalty", UpdatePenaltyReducer),
 );
 
@@ -88,22 +124,76 @@ const reducersSchema = __reducers(
 const proceduresSchema = __procedures(
 );
 
+type __SchemaWithTableAccessorAliases = Omit<typeof tablesSchema.schemaType, "tables"> & {
+  tables: typeof tablesSchema.schemaType.tables & {
+    /** @deprecated Use `friendPracticeStatus` instead. This alias will be removed in the next major version. */
+    readonly "friend_practice_status": Omit<typeof tablesSchema.schemaType.tables["friendPracticeStatus"], "accessorName"> & { readonly accessorName: "friend_practice_status" };
+    /** @deprecated Use `myFriendRequests` instead. This alias will be removed in the next major version. */
+    readonly "my_friend_requests": Omit<typeof tablesSchema.schemaType.tables["myFriendRequests"], "accessorName"> & { readonly accessorName: "my_friend_requests" };
+    /** @deprecated Use `myFriendships` instead. This alias will be removed in the next major version. */
+    readonly "my_friendships": Omit<typeof tablesSchema.schemaType.tables["myFriendships"], "accessorName"> & { readonly accessorName: "my_friendships" };
+  };
+};
+
 /** The remote SpacetimeDB module schema, both runtime and type information. */
 const REMOTE_MODULE = {
   versionInfo: {
     cliVersion: "2.10.2" as const,
   },
-  tables: tablesSchema.schemaType.tables,
+  tables: tablesSchema.schemaType.tables as __SchemaWithTableAccessorAliases["tables"],
   reducers: reducersSchema.reducersType.reducers,
   ...proceduresSchema,
 } satisfies __RemoteModule<
-  typeof tablesSchema.schemaType,
+  __SchemaWithTableAccessorAliases,
   typeof reducersSchema.reducersType,
   typeof proceduresSchema
 >;
 
+const tableAccessorAliases = {
+  "friend_practice_status": "friendPracticeStatus",
+  "my_friend_requests": "myFriendRequests",
+  "my_friendships": "myFriendships",
+} as const;
+
+function __withTableAccessorAliases<T extends object>(target: T, freeze = false): T {
+  const out = Object.create(Object.getPrototypeOf(target)) as T & Record<string, unknown>;
+  Object.defineProperties(out, Object.getOwnPropertyDescriptors(target));
+  for (const [deprecatedAccessor, targetAccessor] of Object.entries(tableAccessorAliases)) {
+    if (deprecatedAccessor in out) {
+      continue;
+    }
+    Object.defineProperty(out, deprecatedAccessor, {
+      enumerable: true,
+      configurable: false,
+      get: () => out[targetAccessor],
+    });
+  }
+  return freeze ? Object.freeze(out) : out;
+}
+
+type __DbViewBase = __DbConnectionImpl<typeof REMOTE_MODULE>["db"];
+export type DbView = __DbViewBase & {
+  /** @deprecated Use `friendPracticeStatus` instead. This alias will be removed in the next major version. */
+  readonly "friend_practice_status": __DbViewBase["friendPracticeStatus"];
+  /** @deprecated Use `myFriendRequests` instead. This alias will be removed in the next major version. */
+  readonly "my_friend_requests": __DbViewBase["myFriendRequests"];
+  /** @deprecated Use `myFriendships` instead. This alias will be removed in the next major version. */
+  readonly "my_friendships": __DbViewBase["myFriendships"];
+};
+
+type __TablesBase = __QueryBuilder<typeof tablesSchema.schemaType>;
+export type Tables = __TablesBase & {
+  /** @deprecated Use `friendPracticeStatus` instead. This alias will be removed in the next major version. */
+  readonly "friend_practice_status": __TablesBase["friendPracticeStatus"];
+  /** @deprecated Use `myFriendRequests` instead. This alias will be removed in the next major version. */
+  readonly "my_friend_requests": __TablesBase["myFriendRequests"];
+  /** @deprecated Use `myFriendships` instead. This alias will be removed in the next major version. */
+  readonly "my_friendships": __TablesBase["myFriendships"];
+};
+
 /** The tables available in this remote SpacetimeDB module. Each table reference doubles as a query builder. */
-export const tables: __QueryBuilder<typeof tablesSchema.schemaType> = __makeQueryBuilder(tablesSchema.schemaType);
+const tablesBase: __TablesBase = __makeQueryBuilder(tablesSchema.schemaType);
+export const tables: Tables = __withTableAccessorAliases(tablesBase, true) as Tables;
 
 /** The reducers available in this remote SpacetimeDB module. */
 export const reducers = __convertToAccessorMap(reducersSchema.reducersType.reducers);
@@ -112,13 +202,13 @@ export const reducers = __convertToAccessorMap(reducersSchema.reducersType.reduc
 export const procedures = __convertToAccessorMap(proceduresSchema.procedures);
 
 /** The context type returned in callbacks for all possible events. */
-export type EventContext = __EventContextInterface<typeof REMOTE_MODULE>;
+export type EventContext = Omit<__EventContextInterface<typeof REMOTE_MODULE>, "db"> & { db: DbView };
 /** The context type returned in callbacks for reducer events. */
-export type ReducerEventContext = __ReducerEventContextInterface<typeof REMOTE_MODULE>;
+export type ReducerEventContext = Omit<__ReducerEventContextInterface<typeof REMOTE_MODULE>, "db"> & { db: DbView };
 /** The context type returned in callbacks for subscription events. */
-export type SubscriptionEventContext = __SubscriptionEventContextInterface<typeof REMOTE_MODULE>;
+export type SubscriptionEventContext = Omit<__SubscriptionEventContextInterface<typeof REMOTE_MODULE>, "db"> & { db: DbView };
 /** The context type returned in callbacks for error events. */
-export type ErrorContext = __ErrorContextInterface<typeof REMOTE_MODULE>;
+export type ErrorContext = Omit<__ErrorContextInterface<typeof REMOTE_MODULE>, "db"> & { db: DbView };
 /** The subscription handle type to manage active subscriptions created from a {@link SubscriptionBuilder}. */
 export type SubscriptionHandle = __SubscriptionHandleImpl<typeof REMOTE_MODULE>;
 
@@ -130,6 +220,13 @@ export class DbConnectionBuilder extends __DbConnectionBuilder<DbConnection> {}
 
 /** The typed database connection to manage connections to the remote SpacetimeDB instance. This class has type information specific to the generated module. */
 export class DbConnection extends __DbConnectionImpl<typeof REMOTE_MODULE> {
+  declare db: DbView;
+
+  constructor(config: __DbConnectionConfig<typeof REMOTE_MODULE>) {
+    super(config);
+    this.db = __withTableAccessorAliases(this.db) as DbView;
+  }
+
   /** Creates a new {@link DbConnectionBuilder} to configure and connect to the remote SpacetimeDB instance. */
   static builder = (): DbConnectionBuilder => {
     return new DbConnectionBuilder(REMOTE_MODULE, (config: __DbConnectionConfig<typeof REMOTE_MODULE>) => new DbConnection(config));

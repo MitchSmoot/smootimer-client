@@ -15,7 +15,18 @@
     </li>          
     @if (auth.isAuthenticated) {
       <li>
-        <a class="nav-user" routerLink="/users/{{ users.currentUser()?.identity.toString() }}">{{ users.currentUser()?.name ?? auth.profile?.name ?? auth.profile?.email }}</a>
+        <a class="nav-user" routerLink="/users/{{ users.currentUser()?.identity.toString() }}">
+          {{ users.currentUser()?.name ?? auth.profile?.name ?? auth.profile?.email }}
+          @if (friends.hasIncomingRequests()) {
+            <svg
+              class="nav-notification"
+              app-notification-icon
+              role="img"
+              aria-label="You have new friend requests"
+              title="You have new friend requests"
+            ></svg>
+          }
+        </a>
       </li>
       <li>
         <a (click)="auth.logout()">Logout</a>

@@ -1,35 +1,186 @@
-<section>
-  <h2>{{profile?.name}}'s Profile</h2>
+<section class="profile-section">
+  @if (profile(); as profile) {
+    <h2 class="profile-heading">
+      {{ profile.name }}'s Profile
+      @if (isFriend()) {
+        <svg
+          class="friend-icon"
+          app-friend-icon
+          role="img"
+          aria-label="Friend"
+          title="You are friends"
+        ></svg>
+      }
+    </h2>
+
+    @if (canManageFriendship()) {
+      <div class="friend-actions">
+        @if (isFriend()) {
+          <button type="button" (click)="removeFriend()">Remove friend</button>
+        } @else if (incomingRequest(); as request) {
+          <span>{{ profile.name }} sent you a friend request.</span>
+          <button type="button" (click)="friends.accept(request.id)">Accept</button>
+          <button type="button" (click)="friends.deny(request.id)">Deny</button>
+        } @else if (outgoingRequest(); as request) {
+          <span>Friend request sent.</span>
+          <button type="button" (click)="friends.cancelRequest(request.id)">Cancel request</button>
+        } @else {
+          <button type="button" (click)="addFriend()">Add friend</button>
+        }
+      </div>
+    }
+
+    @if (editing()) {
+      <form class="profile-form" [formGroup]="form" (ngSubmit)="save()">
+        <label>
+          Username
+          <input type="text" formControlName="name" maxlength="32" autocomplete="off" />
+        </label>
+        @if (form.controls.name.touched && form.controls.name.invalid) {
+          <p class="form-error">Username is required (max 32 characters).</p>
+        }
+
+        <label>
+          WCA ID <span class="optional">(optional)</span>
+          <input type="text" formControlName="wcaId" maxlength="10" placeholder="2015SMIT01" autocomplete="off" />
+        </label>
+        @if (form.controls.wcaId.touched && form.controls.wcaId.invalid) {
+          <p class="form-error">A WCA ID is four digits, four letters, then two digits (e.g. 2015SMIT01).</p>
+        }
+
+        <label>
+          Name <span class="optional">(optional)</span>
+          <input type="text" formControlName="realName" maxlength="64" autocomplete="off" />
+        </label>
+        @if (form.controls.realName.touched && form.controls.realName.invalid) {
+          <p class="form-error">Name must be 64 characters or fewer.</p>
+        }
+
+        <div class="form-actions">
+          <button type="submit" [disabled]="form.invalid">Save</button>
+          <button type="button" (click)="cancelEditing()">Cancel</button>
+        </div>
+      </form>
+    } @else {
+      <dl class="profile-details">
+        @if (profile.realName) {
+          <dt>Name</dt>
+          <dd>{{ profile.realName }}</dd>
+        }
+        @if (profile.wcaId) {
+          <dt>WCA ID</dt>
+          <dd>
+            <a
+              [href]="'https://www.worldcubeassociation.org/persons/' + profile.wcaId"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ profile.wcaId }}</a
+            >
+          </dd>
+        }
+      </dl>
+      @if (isOwnProfile()) {
+        <button type="button" (click)="startEditing()">Edit profile</button>
+      }
+    }
+  } @else {
+    <h2>User not found</h2>
+  }
   <a href="/users">Back to User List</a>
 </section>
 
-<section class="records-section">
-  <article>
-    <h3>Records</h3>
-    @for (record of profile?.records ; track record.event) {
-      <div class="record-card">
-        <div class="record-card-header">
-          <span class="puzzle-icon">
-            @if (record.event == '2x2') {
-              <svg class="puzzle-icon" app-2x2-icon></svg>
-            } @else if (record.event == '3x3') {
-              <svg class="puzzle-icon" app-3x3-icon></svg>
-            } @else if (record.event == '4x4') {
-              <svg class="puzzle-icon" app-4x4-icon></svg>
-            } @else if (record.event == '5x5') {
-              <svg class="puzzle-icon" app-5x5-icon></svg>
+@if (isOwnProfile()) {
+  <section class="friends-section">
+    <h3>Friend Requests</h3>
+    @if (friends.incomingRequests().length) {
+      <ul class="friend-list">
+        @for (item of friends.incomingRequests(); track item.request.id) {
+          <li>
+            @if (item.from; as from) {
+              <a [routerLink]="['/users', from.identity.toString()]">{{ from.name }}</a>
             } @else {
-              <svg class="puzzle-icon" app-3x3-icon></svg>
+              <span>Unknown user</span>
             }
-          </span>
-          {{ record.event }}
-        </div>
-        <div class="record-card-details">
-          <p>Best Time: {{ record.time }} ms</p>
-          <p>Average: {{ record.average }} ms</p>
-        </div>
-      </div>
+            <span class="friend-list-actions">
+              <button type="button" (click)="friends.accept(item.request.id)">Accept</button>
+              <button type="button" (click)="friends.deny(item.request.id)">Deny</button>
+            </span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p>No pending friend requests.</p>
     }
-  </article>
-</section>
 
+    <h3>Friends</h3>
+    @if (friends.friends().length) {
+      <table class="records-table">
+        <thead>
+          <tr>
+            <th scope="col">Friend</th>
+            <th scope="col">Status</th>
+            <th scope="col">Practicing</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (friend of friends.friends(); track friend.identity.toString()) {
+            <tr>
+              <th scope="row">
+                <a [routerLink]="['/users', friend.identity.toString()]">{{ friend.name }}</a>
+              </th>
+              <td>
+                <span class="status" [class.status-online]="friend.online">
+                  {{ friend.online ? 'Online' : 'Offline' }}
+                </span>
+              </td>
+              <td>{{ friend.practicingEvent ?? '' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <p>You haven't added any friends yet.</p>
+    }
+  </section>
+}
+
+<section class="records-section">
+  <h3>Records</h3>
+  @if (records().length) {
+    <table class="records-table">
+      <thead>
+        <tr>
+          <th scope="col">Event</th>
+          <th scope="col">Best Single</th>
+          <th scope="col">Best Ao5</th>
+          <th scope="col">Solves</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (record of records(); track record.event) {
+          <tr>
+            <th scope="row">
+              <span class="event-cell">
+                @if (record.event === '2x2') {
+                  <svg class="puzzle-icon" app-2x2-icon></svg>
+                } @else if (record.event === '3x3') {
+                  <svg class="puzzle-icon" app-3x3-icon></svg>
+                } @else if (record.event === '4x4') {
+                  <svg class="puzzle-icon" app-4x4-icon></svg>
+                } @else if (record.event === '5x5') {
+                  <svg class="puzzle-icon" app-5x5-icon></svg>
+                }
+                {{ record.event }}
+              </span>
+            </th>
+            <td>{{ record.bestSingle === null ? 'DNF' : (record.bestSingle | timeDisplay) }}</td>
+            <td>{{ record.bestAo5 === null ? '-' : (record.bestAo5 | timeDisplay) }}</td>
+            <td>{{ record.solveCount }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p>No solves recorded yet.</p>
+  }
+</section>

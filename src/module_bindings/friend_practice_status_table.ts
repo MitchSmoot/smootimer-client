@@ -12,9 +12,6 @@ import {
 
 export default __t.row({
   identity: __t.identity().primaryKey(),
-  name: __t.string(),
-  online: __t.bool(),
-  createdAt: __t.timestamp().name("created_at"),
-  wcaId: __t.option(__t.string()).name("wca_id"),
-  realName: __t.option(__t.string()).name("real_name"),
+  event: __t.string(),
+  updatedAt: __t.timestamp().name("updated_at"),
 });

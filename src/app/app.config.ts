@@ -1,41 +1,52 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, signal } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
 import { DbConnection } from '../module_bindings';
 import { provideSpacetimeDB } from 'spacetimedb/angular';
-import { Identity } from 'spacetimedb';
+import { getIdToken, handleRejectedToken, markTokenAccepted } from './features/auth/auth.session';
 
 const HOST = environment.SPACETIMEDB_HOST;
 const DB_NAME = environment.SPACETIMEDB_DB_NAME;
 
-const currentIdentity = signal<Identity | null>(null);
+/**
+ * Must be called after `initAuth()` has resolved (see main.ts) so that the
+ * SpacetimeAuth ID token, if there is one, is available when the SpacetimeDB
+ * connection is built.
+ *
+ * Logged in  -> connect with the ID token; SpacetimeDB derives a stable identity from it.
+ * Logged out -> connect anonymously (read-only guest, throwaway identity).
+ */
+export function buildAppConfig(): ApplicationConfig {
+  const idToken = getIdToken();
 
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+  return {
+    providers: [
+      provideBrowserGlobalErrorListeners(),
+      provideZoneChangeDetection({ eventCoalescing: true }),
+      provideRouter(routes),
 
       provideSpacetimeDB(
         DbConnection.builder()
-        .withUri(HOST)
-        .withDatabaseName(DB_NAME)
-        .withToken(localStorage.getItem('auth_token') || undefined)
-        .onConnect((conn, identity, token) => {
-          localStorage.setItem('auth_token', token);
-          currentIdentity.set(identity);
-          console.log('SpacetimeDB connected:', identity.toHexString());
-          conn.subscriptionBuilder().subscribeToAllTables();
-        })
-        .onDisconnect(() => {
-          currentIdentity.set(null);
-          console.log('SpacetimeDB disconnected');
-        })
-        .onConnectError((_ctx, err) => {
-          console.error('SpacetimeDB connection error:', err);
-        })
-    ),
-  ]
-};
+          .withUri(HOST)
+          .withDatabaseName(DB_NAME)
+          .withToken(idToken)
+          .onConnect((conn, identity) => {
+            markTokenAccepted();
+            console.log(
+              `SpacetimeDB connected as ${idToken ? 'user' : 'guest'}:`,
+              identity.toHexString()
+            );
+            conn.subscriptionBuilder().subscribeToAllTables();
+          })
+          .onDisconnect(() => {
+            console.log('SpacetimeDB disconnected');
+          })
+          .onConnectError((_ctx, err) => {
+            console.error('SpacetimeDB connection error:', err);
+            if (idToken) void handleRejectedToken();
+          })
+      ),
+    ]
+  };
+}

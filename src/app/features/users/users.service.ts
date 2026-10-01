@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import { injectTable } from 'spacetimedb/angular';
+import { computed, inject, Injectable } from '@angular/core';
+import { AuthService } from '../auth/auth.service';
+import { tables } from '../../../module_bindings';
 
 const testUsers = [
   { id: 1, name: 'Mitch',   email: 'mitch@example.com', score: 100, friendIds: [2, 3, 4], records: [{event: '2x2', time: 2000, average: 2500}, {event: '3x3', time: 15000, average: 18000}, {event: 'Megaminx', time: 30000, average: 35000}] },
@@ -13,6 +16,15 @@ const testUsers = [
   providedIn: 'root'
 })
 export class UsersService {
+  private auth = inject(AuthService);
+  protected users = injectTable(tables.user);
+
+  /** The `user` row for the logged-in person (created server-side on first login). Undefined for guests. */
+  currentUser = computed(() => {
+    const identity = this.auth.identity();
+    if (!identity) return undefined;
+    return this.users().rows.find((u) => u.identity.isEqual(identity));
+  });
 
   getUsers() {
     return testUsers;

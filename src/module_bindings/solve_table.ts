@@ -12,6 +12,7 @@ import {
 
 export default __t.row({
   id: __t.u64().primaryKey(),
+  owner: __t.identity(),
   event: __t.string(),
   time: __t.u32(),
   solvedAt: __t.timestamp().name("solved_at"),

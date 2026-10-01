@@ -12,6 +12,7 @@ import {
 
 export const Solve = __t.object("Solve", {
   id: __t.u64(),
+  owner: __t.identity(),
   event: __t.string(),
   time: __t.u32(),
   solvedAt: __t.timestamp(),
@@ -22,16 +23,10 @@ export const Solve = __t.object("Solve", {
 export type Solve = __Infer<typeof Solve>;
 
 export const User = __t.object("User", {
-  id: __t.u64(),
-  email: __t.string(),
+  identity: __t.identity(),
   name: __t.string(),
   online: __t.bool(),
+  createdAt: __t.timestamp(),
 });
 export type User = __Infer<typeof User>;
-
-export const UserIdentity = __t.object("UserIdentity", {
-  identity: __t.identity(),
-  userId: __t.u64(),
-});
-export type UserIdentity = __Infer<typeof UserIdentity>;
 

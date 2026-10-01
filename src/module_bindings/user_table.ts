@@ -11,8 +11,8 @@ import {
 } from "spacetimedb";
 
 export default __t.row({
-  id: __t.u64().primaryKey(),
-  email: __t.string(),
+  identity: __t.identity().primaryKey(),
   name: __t.string(),
   online: __t.bool(),
+  createdAt: __t.timestamp().name("created_at"),
 });

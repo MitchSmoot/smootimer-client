@@ -1,3 +1,9 @@
+@if (!auth.isAuthenticated) {
+  <p class="guest-notice">
+    You're not logged in, so your solves are only saved in this browser.
+    <a (click)="auth.login()">Log in</a> to save your history to your account.
+  </p>
+}
 <app-event-selector />
 <app-timer />
 <section>

@@ -8,5 +8,5 @@ import { MainNav } from "./features/shared/main-nav/main-nav";
   templateUrl: './app.html'
 })
 export class App {
-  protected readonly title = signal('smootimer-client');
+  protected readonly title = signal('CubeTown');
 }

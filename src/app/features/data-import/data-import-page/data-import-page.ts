@@ -1,17 +1,16 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DataImport } from '../data-import';
 
 @Component({
   selector: 'app-data-import-page',
   imports: [],
   templateUrl: './data-import-page.html',
-  styleUrl: './data-import-page.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './data-import-page.scss',
 })
 export class DataImportPage {
   dataImport = inject(DataImport);
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   onFileSelected(file: any): void {
     console.log(file);

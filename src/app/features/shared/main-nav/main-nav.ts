@@ -1,4 +1,4 @@
-import { Component, inject, Signal } from '@angular/core';
+import { Component, inject, Signal, ChangeDetectionStrategy } from '@angular/core';
 import { Theme } from '../theme/theme';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
@@ -7,7 +7,8 @@ import { UsersService } from '../../users/users.service';
   selector: 'app-main-nav',
   imports: [RouterLink],
   templateUrl: './main-nav.html',
-  styleUrl: './main-nav.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './main-nav.scss',
 })
 export class MainNav {
   theme = inject(Theme);

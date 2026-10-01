@@ -1,5 +1,5 @@
 import { EventService } from './../timer/event.service';
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, ChangeDetectionStrategy } from '@angular/core';
 import * as d3 from 'd3';
 import { TimerService } from '../timer/timer.service';
 import { Solve } from '../../../core/models/solve';
@@ -8,13 +8,13 @@ import { Solve } from '../../../core/models/solve';
   selector: 'app-timer-chart',
   imports: [],
   templateUrl: './timer-chart.html',
-  styleUrl: './timer-chart.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './timer-chart.scss',
 })
 export class TimerChart {
   private timerService = inject(TimerService);
   private EventService = inject(EventService);
   solves = this.timerService.solves();
-
 
   private svg: d3.Selection<SVGGElement, unknown, HTMLElement, any> | null = null;
   private width = 1080;
@@ -30,12 +30,13 @@ export class TimerChart {
     });
   }
 
-  private updateChart(solves: Solve[] ): void {
+  private updateChart(solves: Solve[]): void {
     // Clear existing chart
     d3.select('#chart').selectAll('*').remove();
 
     // Set up SVG container
-    this.svg = d3.select('#chart')
+    this.svg = d3
+      .select('#chart')
       .append('svg')
       .attr('width', this.width)
       .attr('height', this.height)
@@ -46,25 +47,27 @@ export class TimerChart {
     const innerHeight = this.height - this.margin.top - this.margin.bottom;
 
     // Set up scales
-    const x = d3.scaleTime()
-      .domain(d3.extent(solves, d => d.solvedAt) as [Date, Date])
+    const x = d3
+      .scaleTime()
+      .domain(d3.extent(solves, (d) => d.solvedAt) as [Date, Date])
       .range([0, innerWidth]);
 
-    const y = d3.scaleLinear()
-      .domain([0, d3.max(solves, d => d.time) as number])
+    const y = d3
+      .scaleLinear()
+      .domain([0, d3.max(solves, (d) => d.time) as number])
       .range([innerHeight, 0]);
 
     // Define the line
-    const line = d3.line<{ solvedAt: Date, time: number }>()
-      .x(d => x(d.solvedAt))
-      .y(d => y(d.time));
+    const line = d3
+      .line<{ solvedAt: Date; time: number }>()
+      .x((d) => x(d.solvedAt))
+      .y((d) => y(d.time));
 
-    const tooltipDiv = d3.select("#chart").append("div")
-      .attr("id", "tooltip")
-      .style("opacity", 0);
+    const tooltipDiv = d3.select('#chart').append('div').attr('id', 'tooltip').style('opacity', 0);
 
     // Add the line path
-    this.svg.append('path')
+    this.svg
+      .append('path')
       .datum(solves)
       .attr('fill', 'none')
       .attr('stroke', 'steelblue')
@@ -72,55 +75,44 @@ export class TimerChart {
       .attr('d', line);
 
     // Add circles for each solve
-    this.svg.selectAll("circle")
+    this.svg
+      .selectAll('circle')
       .data(solves)
       .enter()
-      .append("circle")
-      .attr("cx", d => x(d.solvedAt))
-      .attr("cy", d => y(d.time))
-      .attr("r", 5)
-      .style("fill", "steelblue").on("mouseover", function(event, d) {
-        d3.select(this)
-          .transition()
-          .duration(100)
-          .attr("r", 7)
-          .style("fill", "orange");
+      .append('circle')
+      .attr('cx', (d) => x(d.solvedAt))
+      .attr('cy', (d) => y(d.time))
+      .attr('r', 5)
+      .style('fill', 'steelblue')
+      .on('mouseover', function (event, d) {
+        d3.select(this).transition().duration(100).attr('r', 7).style('fill', 'orange');
 
-        const tooltip = d3.select("#tooltip");
-        tooltip.transition()
-          .duration(10)
-          .style("opacity", 1);
-        tooltip.html(`
+        const tooltip = d3.select('#tooltip');
+        tooltip.transition().duration(10).style('opacity', 1);
+        tooltip
+          .html(
+            `
           Time: ${d.time / 1000} seconds<br/>
           Date: ${d.solvedAt.toLocaleString()}<br/>
           Event: ${d.event}<br/>
           ${d.penalty ? `Penalty: ${d.penalty}<br/>` : ''}
           ${d.comment ? `Comment: ${d.comment}<br/>` : ''}
           ${d.scramble ? `Scramble: ${d.scramble}<br/>` : ''}
-        `)
-          .style("left", (event.pageX + 16) + "px")
-          .style("top", (event.pageY - 28) + "px");
+        `,
+          )
+          .style('left', event.pageX + 16 + 'px')
+          .style('top', event.pageY - 28 + 'px');
       })
-      .on("mouseout", function() {
-        d3.select(this)
-          .transition()
-          .duration(100)
-          .attr("r", 5)
-          .style("fill", "steelblue");
+      .on('mouseout', function () {
+        d3.select(this).transition().duration(100).attr('r', 5).style('fill', 'steelblue');
 
-        d3.select("#tooltip").transition()
-          .duration(100)
-          .style("opacity", 0);
+        d3.select('#tooltip').transition().duration(100).style('opacity', 0);
       });
 
     // Add x-axis
-    this.svg.append('g')
-      .attr('transform', `translate(0,${innerHeight})`)
-      .call(d3.axisBottom(x));
+    this.svg.append('g').attr('transform', `translate(0,${innerHeight})`).call(d3.axisBottom(x));
 
     // Add y-axis
-    this.svg.append('g')
-      .call(d3.axisLeft(y));
+    this.svg.append('g').call(d3.axisLeft(y));
   }
-
 }

@@ -1,13 +1,14 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener, inject, ChangeDetectionStrategy } from '@angular/core';
 import { EventService } from './event.service';
 import { TimerService } from './timer.service';
-import { TimeDisplayPipe } from "../../../core/time-display-pipe";
+import { TimeDisplayPipe } from '../../../core/time-display-pipe';
 
 @Component({
   selector: 'app-timer',
   imports: [TimeDisplayPipe],
   templateUrl: './timer.html',
-  styleUrl: './timer.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './timer.scss',
 })
 export class Timer {
   eventService = inject(EventService);
@@ -78,8 +79,7 @@ export class Timer {
 
   startCountdown(): void {
     this.countingDown = true;
-    this.countdownRef = setInterval(() =>
-    this.countdown = this.countdown - 1);
+    this.countdownRef = setInterval(() => (this.countdown = this.countdown - 1));
   }
 
   stopCountdown(): void {
@@ -91,12 +91,11 @@ export class Timer {
     this.timerService.addSolve({
       time: this.timeCounter,
       event: this.eventService.currentEvent().title,
-      solvedAt: new Date()
+      solvedAt: new Date(),
     });
   }
 
   deleteTime(id: bigint): void {
     this.timerService.deleteSolve(id);
   }
-
 }

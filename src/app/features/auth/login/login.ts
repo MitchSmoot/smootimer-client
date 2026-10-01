@@ -1,11 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './login.scss',
 })
 export class Login {
   protected auth = inject(AuthService);

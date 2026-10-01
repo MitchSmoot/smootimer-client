@@ -15,7 +15,7 @@
     </li>          
     @if (auth.isAuthenticated) {
       <li>
-        <span class="nav-user">{{ users.currentUser()?.name ?? auth.profile?.name ?? auth.profile?.email }}</span>
+        <a class="nav-user" routerLink="/users/{{ users.currentUser()?.identity.toString() }}">{{ users.currentUser()?.name ?? auth.profile?.name ?? auth.profile?.email }}</a>
       </li>
       <li>
         <a (click)="auth.logout()">Logout</a>

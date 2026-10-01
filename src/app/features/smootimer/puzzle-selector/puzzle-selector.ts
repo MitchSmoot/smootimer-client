@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-puzzle-selector',
   imports: [],
   templateUrl: './puzzle-selector.html',
-  styleUrl: './puzzle-selector.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './puzzle-selector.scss',
 })
-export class PuzzleSelector {
-
-}
+export class PuzzleSelector {}

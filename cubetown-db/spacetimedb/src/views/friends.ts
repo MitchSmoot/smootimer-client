@@ -24,6 +24,19 @@ export const my_friendships = spacetimedb.view(
   ctx => [...ctx.db.friendship.friendship_owner.filter(ctx.sender)]
 );
 
+/** Recent ticks from the caller's friends (the caller's own ticks are not included). */
+export const friend_ticks = spacetimedb.view(
+  { name: 'friend_ticks', public: true },
+  t.array(CubetownSchema.tick.rowType),
+  ctx => {
+    const ticks = [];
+    for (const friendship of ctx.db.friendship.friendship_owner.filter(ctx.sender)) {
+      ticks.push(...ctx.db.tick.tick_actor.filter(friendship.friend));
+    }
+    return ticks;
+  }
+);
+
 /** What event each of the caller's friends currently has open in the timer page. */
 export const friend_practice_status = spacetimedb.view(
   { name: 'friend_practice_status', public: true },

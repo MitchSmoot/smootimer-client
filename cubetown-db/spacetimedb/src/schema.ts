@@ -26,6 +26,8 @@ export const CubetownSchema = {
       // New columns go last and carry a default so the published table can be migrated in place.
       wcaId: t.string().optional().default(undefined),
       realName: t.string().optional().default(undefined),
+      // Focus mode (see `set_focus`): online, but not wanting to be disturbed. Reset on disconnect.
+      focusing: t.bool().default(false),
     }
   ),
   /**
@@ -95,6 +97,25 @@ export const CubetownSchema = {
       owner: t.identity(),
       friend: t.identity(),
       since: t.timestamp(),
+    }
+  ),
+
+  /**
+   * A short message shown in the ticker of the actor's friends ("Sam is online",
+   * "Sam solved 3x3 in 12.345"). Stored ONCE per tick, keyed by `actor`, rather than
+   * once per recipient: a friend reads them through `friend_ticks`, which is
+   * friendship_owner(me) -> tick_actor(friend), i.e. two index lookups and no scan.
+   * Only the newest few per actor are kept (see ticker.ts), so the table stays small.
+   */
+  tick: table(
+    {
+      indexes: [{ accessor: 'tick_actor', algorithm: 'btree', columns: ['actor'] }],
+    },
+    {
+      id: t.u64().primaryKey().autoInc(),
+      actor: t.identity(),
+      message: t.string(),
+      createdAt: t.timestamp(),
     }
   ),
 

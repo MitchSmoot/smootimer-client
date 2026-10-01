@@ -1,6 +1,7 @@
 import { SenderError, t } from 'spacetimedb/server';
 import { spacetimedb } from '../schema';
 import { displayNameFromClaims, isTrustedUserToken } from '../auth';
+import { tick } from '../ticker';
 
 /**
  * Called every time a client connects.
@@ -17,6 +18,8 @@ export const onConnect = spacetimedb.clientConnected(ctx => {
   const existing = ctx.db.user.identity.find(ctx.sender);
   if (existing) {
     ctx.db.user.identity.update({ ...existing, online: true });
+    // A second tab / reconnect while already online isn't news.
+    if (!existing.online) tick(ctx, ctx.sender, `${existing.name} came online`);
     return;
   }
 
@@ -27,19 +30,32 @@ export const onConnect = spacetimedb.clientConnected(ctx => {
     createdAt: ctx.timestamp,
     wcaId: undefined,
     realName: undefined,
+    focusing: false,
   });
 });
 
 export const onDisconnect = spacetimedb.clientDisconnected(ctx => {
   const existing = ctx.db.user.identity.find(ctx.sender);
   if (existing) {
-    ctx.db.user.identity.update({ ...existing, online: false });
+    ctx.db.user.identity.update({ ...existing, online: false, focusing: false });
+    if (existing.online) tick(ctx, ctx.sender, `${existing.name} went offline`);
   }
   // Closing the tab means they are no longer on the timer page.
   if (ctx.db.practiceStatus.identity.find(ctx.sender)) {
     ctx.db.practiceStatus.identity.delete(ctx.sender);
   }
 });
+
+/** Turns the caller's focus mode on or off. Only touches the caller's own row. */
+export const setFocus = spacetimedb.reducer(
+  { focusing: t.bool() },
+  (ctx, { focusing }) => {
+    const existing = ctx.db.user.identity.find(ctx.sender);
+    if (!existing) throw new SenderError('You must be logged in to use focus mode');
+    if (existing.focusing === focusing) return;
+    ctx.db.user.identity.update({ ...existing, focusing });
+  }
+);
 
 /** Lets a logged-in user change their display name. */
 export const setName = spacetimedb.reducer(

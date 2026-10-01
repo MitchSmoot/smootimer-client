@@ -1,5 +1,6 @@
 import { SenderError, t } from 'spacetimedb/server';
 import { spacetimedb } from '../schema';
+import { formatSolveTime, tick } from '../ticker';
 
 const VALID_PENALTIES = ['none', '+2', 'dnf'];
 
@@ -19,7 +20,8 @@ export const addSolve = spacetimedb.reducer(
   },
   (ctx, { event, time, penalty, scramble, comment }) => {
     // Only logged-in users (those with a `user` row, see reducers/users.ts) can save solves.
-    if (!ctx.db.user.identity.find(ctx.sender)) {
+    const user = ctx.db.user.identity.find(ctx.sender);
+    if (!user) {
       throw new SenderError('You must be logged in to save solves.');
     }
     if (!event.trim()) throw new SenderError('Event cannot be empty.');
@@ -35,6 +37,10 @@ export const addSolve = spacetimedb.reducer(
       solvedAt: ctx.timestamp,
       comment
     });
+
+    // Tell online friends. Built here (not by the client) so the name and time can't be faked.
+    const shown = penalty === 'dnf' ? 'DNF' : penalty === '+2' ? `${formatSolveTime(time + 2000)} (+2)` : formatSolveTime(time);
+    tick(ctx, ctx.sender, `${user.name} solved ${event}: ${shown}`);
   }
 );
 
